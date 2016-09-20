@@ -674,7 +674,8 @@ public class PhotoMetadata : MediaMetadata {
     private static string[] DATE_TIME_TAGS = {
         "Exif.Image.DateTime",
         "Xmp.tiff.DateTime",
-        "Xmp.xmp.ModifyDate"
+        "Xmp.xmp.ModifyDate",
+        "Xml.acdsee.datetime"
     };
     
     public MetadataDateTime? get_modification_date_time() {
@@ -805,7 +806,8 @@ public class PhotoMetadata : MediaMetadata {
         "Iptc.Application2.Caption",
         "Xmp.dc.title",
         "Iptc.Application2.Headline",
-        "Xmp.photoshop.Headline"
+        "Xmp.photoshop.Headline",
+        "Xmp.acdsee.caption"
     };
     
     public override string? get_title() {
@@ -844,9 +846,14 @@ public class PhotoMetadata : MediaMetadata {
             remove_tags(STANDARD_TITLE_TAGS);
         }
     }
+
+    private static string[] COMMENT_TAGS = {
+        "Exif.Photo.UserComment",
+        "Xmp.acdsee.notes"
+    };
     
     public override string? get_comment() {
-        return get_string_interpreted("Exif.Photo.UserComment", PrepareInputTextOptions.DEFAULT & ~PrepareInputTextOptions.STRIP_CRLF);
+        return get_first_string_interpreted (COMMENT_TAGS);
     }
     
     public void set_comment(string? comment) {
@@ -858,13 +865,15 @@ public class PhotoMetadata : MediaMetadata {
     
     private static string[] KEYWORD_TAGS = {
         "Xmp.dc.subject",
-        "Iptc.Application2.Keywords"
+        "Iptc.Application2.Keywords",
+        "Xmp.xmp.Label"
     };
     
     private static HierarchicalKeywordField[] HIERARCHICAL_KEYWORD_TAGS = {
         // Xmp.lr.hierarchicalSubject should be writeable but isn't due to this bug
         // in libexiv2: http://dev.exiv2.org/issues/784
         new HierarchicalKeywordField("Xmp.lr.hierarchicalSubject", "|", false, false),
+        new HierarchicalKeywordField("Xmp.acdsee.keywords", "|", false, false),
         new HierarchicalKeywordField("Xmp.digiKam.TagsList", "/", false, true),
         new HierarchicalKeywordField("Xmp.MicrosoftPhoto.LastKeywordXMP", "/", false, true)
     };
@@ -1090,7 +1099,8 @@ public class PhotoMetadata : MediaMetadata {
     
     private static string[] ARTIST_TAGS = {
         "Exif.Image.Artist",
-        "Exif.Canon.OwnerName" // Custom tag used by Canon DSLR cameras
+        "Exif.Canon.OwnerName", // Custom tag used by Canon DSLR cameras
+        "Xmp.acdsee.author" // Custom tag used by ACDSEE software
     };
     
     public string? get_artist() {
@@ -1129,7 +1139,8 @@ public class PhotoMetadata : MediaMetadata {
         "Xmp.xmp.Rating",
         "Iptc.Application2.Urgency",
         "Xmp.photoshop.Urgency",
-        "Exif.Image.Rating"
+        "Exif.Image.Rating",
+        "Xmp.acdsee.rating",
     };
     
     public Rating get_rating() {
