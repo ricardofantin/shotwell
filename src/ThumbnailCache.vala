@@ -290,20 +290,23 @@ public class ThumbnailCache : Object {
     
     // This does not add the thumbnails to the ThumbnailCache, merely generates them for the
     // supplied image file.
-    public static void generate_for_photo(Thumbnails thumbnails, PhotoFileReader reader,
-        Orientation orientation, Dimensions original_dim) throws Error {
+    public static void generate_for_photo(Thumbnails thumbnails,
+                                          PhotoFileReader reader,
+                                          Orientation orientation,
+                                          Dimensions original_dim) throws Error {
         // Taking advantage of Size's values matching their pixel size
         Size max_size = Size.BIG * 2;
         Dimensions dim = max_size.get_scaling().get_scaled_dimensions(original_dim);
         Gdk.Pixbuf? largest_thumbnail = null;
-        try {
+/*        try {
             largest_thumbnail = reader.scaled_read(original_dim, dim);
         } catch (Error err) {
             // if the scaled read generated an error, catch it and try to do an unscaled read
             // followed by a downsample. If the call to unscaled_read() below throws an error,
             // just propagate it up to the caller
             largest_thumbnail = reader.unscaled_read();
-        }
+        } */
+        largest_thumbnail = reader.unscaled_read ();
         largest_thumbnail = orientation.rotate_pixbuf(largest_thumbnail);
         Dimensions largest_thumb_dimensions = Dimensions.for_pixbuf(largest_thumbnail);
 
