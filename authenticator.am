@@ -1,0 +1,29 @@
+lib_LTLIBRARIES += plugins/authenticator/libshotwell-authenticator.la
+plugins_authenticator_libshotwell_authenticator_la_SOURCES = \
+	$(abs_top_srcdir)/plugins/shotwell-plugin-common.vapi
+
+plugins_authenticator_libshotwell_authenticator_la_VALAFLAGS = \
+	$(COMMON_VALAFLAGS) \
+	--library shotwell-authenticator \
+	--vapi=plugins/authenticator/shotwell-authenticator.vapi \
+	--header=plugins/authenticator/shotwell-authenticator.h \
+	--pkg shotwell-plugin-dev-1.0 \
+	$(AUTHENTICATOR_PACKAGES) \
+	--vapidir $(abs_top_srcdir)/plugins
+
+plugins_authenticator_libshotwell_authenticator_la_LIBADD = \
+	$(AUTHENTICATOR_LIBS) \
+	$(top_builddir)/plugins/common/libshotwell-plugin-common.la
+
+plugins_authenticator_libshotwell_authenticator_la_CFLAGS = \
+	$(COMMON_CFLAGS) \
+	$(AUTHENTICATOR_CFLAGS) \
+	-I $(top_srcdir)/plugins \
+	-DPLUGIN_RESOURCE_PATH='"/org/gnome/Shotwell/Authenticator"'
+
+if AUTHENTICATOR_SHOTWELL
+plugins_authenticator_libshotwell_authenticator_la_SOURCES += \
+	plugins/authenticator/shotwell/ShotwellAuthenticatorFactory.vala \
+	plugins/authenticator/shotwell/FacebookPublishingAuthenticator.vala \
+	plugins/authenticator/shotwell/FlickrPublishingAuthenticator.vala
+endif

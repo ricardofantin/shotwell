@@ -98,7 +98,7 @@ public class FlickrPublisher : Spit.Publishing.Publisher, GLib.Object {
     private bool was_started = false;
     private Session session = null;
     private PublishingOptionsPane publishing_options_pane = null;
-    private Publishing.Authenticator.Flickr authenticator;
+    private Spit.Publishing.Authenticator authenticator = null;
    
     private PublishingParameters parameters = null;
 
@@ -109,7 +109,7 @@ public class FlickrPublisher : Spit.Publishing.Publisher, GLib.Object {
         this.host = host;
         this.session = new Session();
         this.parameters = new PublishingParameters();
-        this.authenticator = new Publishing.Authenticator.Flickr (host);
+        this.authenticator = Publishing.Authenticator.Factory.get_instance().create("flickr", host);
 
         this.authenticator.authenticated.connect(on_session_authenticated);
     }

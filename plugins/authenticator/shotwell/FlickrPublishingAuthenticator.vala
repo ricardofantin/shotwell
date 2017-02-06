@@ -4,7 +4,58 @@
  * (version 2.1 or later).  See the COPYING file in this distribution.
  */
 
-namespace Publishing.Authenticator {
+namespace Publishing.Flickr {
+    internal class Transaction : Publishing.RESTSupport.Transaction {
+        public Transaction() {
+            var foo = null as Publishing.RESTSupport.Session;
+
+            base(foo, Publishing.RESTSupport.HttpMethod.POST);
+        }
+
+        public Transaction.with_uri (Publishing.RESTSupport.Session session,
+                                     string uri,
+                                     Publishing.RESTSupport.HttpMethod method) {
+            base.with_endpoint_url(session, uri, method);
+        }
+    }
+
+    internal class Session : Publishing.RESTSupport.Session {
+        public override bool is_authenticated() {
+            return false;
+        }
+
+        public void set_api_credentials(string key, string secret) {
+        }
+
+        public string get_request_phase_token() {
+            return "";
+        }
+
+        public string get_request_phase_token_secret() {
+            return "";
+        }
+
+        public string get_access_phase_token() {
+            return "";
+        }
+
+        public string get_access_phase_token_secret() {
+            return "";
+        }
+
+        public string get_username() {
+            return "";
+        }
+
+        public void set_request_phase_credentials (string token, string token_secret) {
+        }
+
+        public void set_access_phase_credentials(string token, string token_secret, string user_name) {
+        }
+    }
+}
+
+namespace Publishing.Authenticator.Shotwell.Flickr {
     internal const string API_KEY = "60dd96d4a2ad04888b09c9e18d82c26f";
     internal const string API_SECRET = "d0960565e03547c1";
 
@@ -82,7 +133,7 @@ namespace Publishing.Authenticator {
     }
 
 
-    public class Flickr : GLib.Object, Spit.Publishing.Authenticator {
+    internal class Flickr : GLib.Object, Spit.Publishing.Authenticator {
         private GLib.HashTable<string, Variant> params;
         private Publishing.Flickr.Session session;
         private Spit.Publishing.PluginHost host;
