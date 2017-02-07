@@ -7,7 +7,6 @@ dist_noinst_DATA += \
 	plugins/shotwell-publishing/piwigo.png \
 	plugins/shotwell-publishing/youtube.png \
 	plugins/shotwell-publishing/facebook_publishing_options_pane.ui \
-	plugins/shotwell-publishing/flickr_pin_entry_pane.ui \
 	plugins/shotwell-publishing/flickr_publishing_options_pane.ui \
 	plugins/shotwell-publishing/picasa_publishing_options_pane.ui \
 	plugins/shotwell-publishing/piwigo_authentication_pane.ui \
@@ -72,3 +71,4 @@ plugins_shotwell_publishing_shotwell_publishing_la_LIBADD = \
 	$(PUBLISHING_LIBS) \
 	$(top_builddir)/plugins/common/libshotwell-plugin-common.la \
 	$(top_builddir)/plugins/authenticator/libshotwell-authenticator.la
+
