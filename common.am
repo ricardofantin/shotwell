@@ -1,8 +1,11 @@
+BASE_VALAFLAGS = \
+	--target-glib=2.40 --thread --fatal-warnings \
+	--enable-experimental --enable-deprecated
+
 # --enable-checking needs to come first to not trigger
 #  https://debbugs.gnu.org/cgi/bugreport.cgi?bug=18734
 COMMON_VALAFLAGS = \
-	--enable-checking --target-glib=2.40 --thread --fatal-warnings \
-	--enable-experimental --enable-deprecated
+	--enable-checking $(BASE_VALAFLAGS)
 
 COMMON_CFLAGS = \
 	-I$(top_srcdir)/vapi \

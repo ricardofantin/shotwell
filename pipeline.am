@@ -9,8 +9,7 @@ src_libgraphics_processor_la_SOURCES = \
 	src/util/KeyValueMap.vala
 
 src_libgraphics_processor_la_VALAFLAGS = \
-	$(COMMON_VALAFLAGS) \
-	--disable-assert \
+	$(BASE_VALAFLAGS) \
 	--pkg gio-2.0 \
 	--pkg gdk-3.0 \
 	--pkg gee-0.8 \
@@ -20,6 +19,11 @@ src_libgraphics_processor_la_VALAFLAGS = \
 
 src_libgraphics_processor_la_CFLAGS = $(SHOTWELL_CFLAGS) $(COMMON_CFLAGS)
 
+if IS_NDEBUG
+src_libgraphics_processor_la_VALAFLAGS += --disable-assert
+
+src_libgraphics_processor_la_CFLAGS += -DG_DISABLE_CAST_CHECKS
+endif
 
 noinst_PROGRAMS = \
 	src/shotwell-graphics-processor
