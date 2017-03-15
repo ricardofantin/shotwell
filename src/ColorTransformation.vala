@@ -5,30 +5,30 @@
  */
 
 public struct RGBAnalyticPixel {
-    public float red;
-    public float green;
-    public float blue;
+    public double red;
+    public double green;
+    public double blue;
 
-    private const float INV_255 = 1.0f / 255.0f;
+    private const double INV_255 = 1.0 / 255.0f;
 
     public RGBAnalyticPixel() {
-        red = 0.0f;
-        green = 0.0f;
-        blue = 0.0f;
+        red = 0.0;
+        green = 0.0;
+        blue = 0.0;
     }
 
-    public RGBAnalyticPixel.from_components(float red, float green,
-        float blue) {
-        this.red = red.clamp(0.0f, 1.0f);
-        this.green = green.clamp(0.0f, 1.0f);
-        this.blue = blue.clamp(0.0f, 1.0f);
+    public RGBAnalyticPixel.from_components(double red, double green,
+        double blue) {
+        this.red = red.clamp(0.0, 1.0f);
+        this.green = green.clamp(0.0, 1.0f);
+        this.blue = blue.clamp(0.0, 1.0f);
     }
 
     public RGBAnalyticPixel.from_quantized_components(uchar red_quantized,
         uchar green_quantized, uchar blue_quantized) {
-        this.red = ((float) red_quantized) * INV_255;
-        this.green = ((float) green_quantized) * INV_255;
-        this.blue = ((float) blue_quantized) * INV_255;
+        this.red = ((double) red_quantized) * INV_255;
+        this.green = ((double) green_quantized) * INV_255;
+        this.blue = ((double) blue_quantized) * INV_255;
     }
 
     public RGBAnalyticPixel.from_hsv(HSVAnalyticPixel hsv_pixel) {
@@ -39,15 +39,15 @@ public struct RGBAnalyticPixel {
     }
 
     public uchar quantized_red() {
-        return (uchar)(red * 255.0f);
+        return (uchar)(red * 255.0);
     }
 
     public uchar quantized_green() {
-        return (uchar)(green * 255.0f);
+        return (uchar)(green * 255.0);
     }
 
     public uchar quantized_blue() {
-        return (uchar)(blue * 255.0f);
+        return (uchar)(blue * 255.0);
     }
 
     public bool equals(RGBAnalyticPixel? rhs) {
@@ -55,8 +55,8 @@ public struct RGBAnalyticPixel {
     }
 
     public uint hash_code() {
-        return (((uint)(red * 255.0f)) << 16) + (((uint)(green * 255.0f)) << 8) +
-            ((uint)(blue * 255.0f));
+        return (((uint)(red * 255.0)) << 16) + (((uint)(green * 255.0f)) << 8) +
+            ((uint)(blue * 255.0));
     }
 
     public HSVAnalyticPixel to_hsv() {
@@ -65,86 +65,86 @@ public struct RGBAnalyticPixel {
 }
 
 public struct HSVAnalyticPixel {
-    public float hue;
-    public float saturation;
-    public float light_value;
+    public double hue;
+    public double saturation;
+    public double light_value;
     
-    private const float INV_255 = 1.0f / 255.0f;
+    private const double INV_255 = 1.0 / 255.0f;
 
     public HSVAnalyticPixel() {
-        hue = 0.0f;
-        saturation = 0.0f;
-        light_value = 0.0f;
+        hue = 0.0;
+        saturation = 0.0;
+        light_value = 0.0;
     }
 
-    public HSVAnalyticPixel.from_components(float hue, float saturation,
-        float light_value) {
-        this.hue = hue.clamp(0.0f, 1.0f);
-        this.saturation = saturation.clamp(0.0f, 1.0f);
-        this.light_value = light_value.clamp(0.0f, 1.0f);
+    public HSVAnalyticPixel.from_components(double hue, double saturation,
+        double light_value) {
+        this.hue = hue.clamp(0.0, 1.0f);
+        this.saturation = saturation.clamp(0.0, 1.0f);
+        this.light_value = light_value.clamp(0.0, 1.0f);
     }
 
     public HSVAnalyticPixel.from_quantized_components(uchar hue_quantized,
         uchar saturation_quantized, uchar light_value_quantized) {
-        this.hue = ((float) hue_quantized) * INV_255;
-        this.saturation = ((float) saturation_quantized) * INV_255;
-        this.light_value = ((float) light_value_quantized) * INV_255;
+        this.hue = ((double) hue_quantized) * INV_255;
+        this.saturation = ((double) saturation_quantized) * INV_255;
+        this.light_value = ((double) light_value_quantized) * INV_255;
     }
 
     public HSVAnalyticPixel.from_rgb(RGBAnalyticPixel p) {
-        float max_component = float.max(float.max(p.red, p.green), p.blue);
-        float min_component = float.min(float.min(p.red, p.green), p.blue);
+        double max_component = double.max(double.max(p.red, p.green), p.blue);
+        double min_component = double.min(double.min(p.red, p.green), p.blue);
 
         light_value = max_component;
-        saturation = (max_component != 0.0f) ? ((max_component - min_component) /
-            max_component) : 0.0f;
+        saturation = (max_component != 0.0) ? ((max_component - min_component) /
+            max_component) : 0.0;
 
-        if (saturation == 0.0f) {
-            hue = 0.0f; /* hue is undefined in the zero saturation case */
+        if (saturation == 0.0) {
+            hue = 0.0; /* hue is undefined in the zero saturation case */
         } else {
-            float delta = max_component - min_component;
+            double delta = max_component - min_component;
             if (p.red == max_component) {
                 hue = (p.green - p.blue) / delta;
             } else if (p.green == max_component) {
-                hue = 2.0f + ((p.blue - p.red) / delta);
+                hue = 2.0 + ((p.blue - p.red) / delta);
             } else if (p.blue == max_component) {
-                hue = 4.0f + ((p.red - p.green) / delta);
+                hue = 4.0 + ((p.red - p.green) / delta);
             }
 
-            hue *= 60.0f;
-            if (hue < 0.0f)
-                hue += 360.0f;
+            hue *= 60.0;
+            if (hue < 0.0)
+                hue += 360.0;
 
-            hue /= 360.0f; /* normalize hue */
+            hue /= 360.0; /* normalize hue */
         }
 
-        hue = hue.clamp(0.0f, 1.0f);
-        saturation = saturation.clamp(0.0f, 1.0f);
-        light_value = light_value.clamp(0.0f, 1.0f);
+        hue = hue.clamp(0.0, 1.0f);
+        saturation = saturation.clamp(0.0, 1.0f);
+        light_value = light_value.clamp(0.0, 1.0f);
     }
 
     public RGBAnalyticPixel to_rgb() {
         RGBAnalyticPixel result = RGBAnalyticPixel();
 
-        if (saturation == 0.0f) {
+        if (saturation == 0.0) {
             result.red = light_value;
             result.green = light_value;
             result.blue = light_value;
         } else {
-            float hue_denorm = hue * 360.0f;
-            if (hue_denorm == 360.0f)
-                hue_denorm = 0.0f;
+            double hue_denorm = hue * 360.0;
+            if (hue_denorm == 360.0)
+                hue_denorm = 0.0;
 
-            float hue_hexant = hue_denorm / 60.0f;
+            double hue_hexant = hue_denorm / 60.0;
 
             int hexant_i_part = (int) hue_hexant;
 
-            float hexant_f_part = hue_hexant - ((float) hexant_i_part);
+            double hexant_f_part = hue_hexant - ((double) hexant_i_part);
 
             /* the p, q, and t quantities from section 13.3 of Foley, et. al. */
-            float p = light_value * (1.0f - saturation);
-            float q = light_value * (1.0f - (saturation * hexant_f_part));
-            float t = light_value * (1.0f - (saturation * (1.0f - hexant_f_part)));
+            double p = light_value * (1.0 - saturation);
+            double q = light_value * (1.0 - (saturation * hexant_f_part));
+            double t = light_value * (1.0 - (saturation * (1.0f - hexant_f_part)));
             switch (hexant_i_part) {
                 /* the (r, g, b) components of the output pixel are computed
                    from the light_value, p, q, and t quantities differently
@@ -205,8 +205,8 @@ public struct HSVAnalyticPixel {
     }
 
     public uint hash_code() {
-        return (((uint)(hue * 255.0f)) << 16) + (((uint)(saturation * 255.0f)) << 8) +
-            ((uint)(light_value * 255.0f));
+        return (((uint)(hue * 255.0)) << 16) + (((uint)(saturation * 255.0f)) << 8) +
+            ((uint)(light_value * 255.0));
     }
 }
 
@@ -258,13 +258,13 @@ public class PixelTransformationBundle {
     
     public void set_to_identity() {
         set(new ExpansionTransformation.from_extrema(0, 255));
-        set(new ShadowDetailTransformation(0.0f));
-        set(new HighlightDetailTransformation(0.0f));
-        set(new TemperatureTransformation(0.0f));
-        set(new TintTransformation(0.0f));
-        set(new SaturationTransformation(0.0f));
-        set(new ExposureTransformation(0.0f));
-        set(new ContrastTransformation(0.0f));
+        set(new ShadowDetailTransformation(0.0));
+        set(new HighlightDetailTransformation(0.0));
+        set(new TemperatureTransformation(0.0));
+        set(new TintTransformation(0.0));
+        set(new SaturationTransformation(0.0));
+        set(new ExposureTransformation(0.0));
+        set(new ContrastTransformation(0.0));
     }
     
     public void load(KeyValueMap store) {
@@ -274,13 +274,13 @@ public class PixelTransformationBundle {
         else
             set(new ExpansionTransformation.from_string(expansion_params_encoded));
         
-        set(new ShadowDetailTransformation(store.get_float("shadows", 0.0f)));
-        set(new HighlightDetailTransformation(store.get_float("highlights", 0.0f)));
-        set(new TemperatureTransformation(store.get_float("temperature", 0.0f)));
-        set(new TintTransformation(store.get_float("tint", 0.0f)));
-        set(new SaturationTransformation(store.get_float("saturation", 0.0f)));
-        set(new ExposureTransformation(store.get_float("exposure", 0.0f)));
-        set(new ContrastTransformation(store.get_float("contrast", 0.0f)));
+        set(new ShadowDetailTransformation(store.get_double("shadows", 0.0)));
+        set(new HighlightDetailTransformation(store.get_double("highlights", 0.0)));
+        set(new TemperatureTransformation(store.get_double("temperature", 0.0)));
+        set(new TintTransformation(store.get_double("tint", 0.0)));
+        set(new SaturationTransformation(store.get_double("saturation", 0.0)));
+        set(new ExposureTransformation(store.get_double("exposure", 0.0)));
+        set(new ContrastTransformation(store.get_double("contrast", 0.0)));
     }
     
     public KeyValueMap save(string group) {
@@ -294,37 +294,37 @@ public class PixelTransformationBundle {
         ShadowDetailTransformation? new_shadows_trans =
             (ShadowDetailTransformation) get_transformation(PixelTransformationType.SHADOWS);
         assert(new_shadows_trans != null);
-        store.set_float("shadows", new_shadows_trans.get_parameter());
+        store.set_double("shadows", new_shadows_trans.get_parameter());
 
         HighlightDetailTransformation? new_highlight_trans =
             (HighlightDetailTransformation) get_transformation(PixelTransformationType.HIGHLIGHTS);
         assert(new_highlight_trans != null);
-        store.set_float("highlights", new_highlight_trans.get_parameter());
+        store.set_double("highlights", new_highlight_trans.get_parameter());
         
         TemperatureTransformation? new_temp_trans =
             (TemperatureTransformation) get_transformation(PixelTransformationType.TEMPERATURE);
         assert(new_temp_trans != null);
-        store.set_float("temperature", new_temp_trans.get_parameter());
+        store.set_double("temperature", new_temp_trans.get_parameter());
 
         TintTransformation? new_tint_trans =
             (TintTransformation) get_transformation(PixelTransformationType.TINT);
         assert(new_tint_trans != null);
-        store.set_float("tint", new_tint_trans.get_parameter());
+        store.set_double("tint", new_tint_trans.get_parameter());
 
         SaturationTransformation? new_sat_trans =
             (SaturationTransformation) get_transformation(PixelTransformationType.SATURATION);
         assert(new_sat_trans != null);
-        store.set_float("saturation", new_sat_trans.get_parameter());
+        store.set_double("saturation", new_sat_trans.get_parameter());
 
         ExposureTransformation? new_exposure_trans =
             (ExposureTransformation) get_transformation(PixelTransformationType.EXPOSURE);
         assert(new_exposure_trans != null);
-        store.set_float("exposure", new_exposure_trans.get_parameter());
+        store.set_double("exposure", new_exposure_trans.get_parameter());
         
         ContrastTransformation? new_contrast_trans =
             (ContrastTransformation) get_transformation(PixelTransformationType.CONTRAST);
         assert(new_contrast_trans != null);
-        store.set_float("contrast", new_contrast_trans.get_parameter());
+        store.set_double("contrast", new_contrast_trans.get_parameter());
 
         return store;
     }
@@ -416,7 +416,7 @@ public abstract class PixelTransformation {
 public class RGBTransformation : PixelTransformation {
     /* matrix entries are stored in row-major order; by default, the matrix formed
        by matrix_entries is the 4x4 identity matrix */
-    protected float[] matrix_entries;
+    protected double[] matrix_entries;
     
     protected const int MATRIX_SIZE = 16;
 
@@ -430,10 +430,10 @@ public class RGBTransformation : PixelTransformation {
         // related to this bug:
         // https://bugzilla.gnome.org/show_bug.cgi?id=570821
         matrix_entries = {
-        1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f };
+        1.0, 0.0f, 0.0f, 0.0f,
+        0.0, 1.0f, 0.0f, 0.0f,
+        0.0, 0.0f, 1.0f, 0.0f,
+        0.0, 0.0f, 0.0f, 1.0f };
     }
 
     public override CompositionMode get_composition_mode() {
@@ -447,7 +447,7 @@ public class RGBTransformation : PixelTransformation {
 
         RGBTransformation transform = (RGBTransformation) other;
 
-        float[] result_matrix_entries = new float[16];
+        double[] result_matrix_entries = new double[16];
 
         /* row 0 */
         result_matrix_entries[0] =
@@ -560,23 +560,23 @@ public class RGBTransformation : PixelTransformation {
     }
 
     public override RGBAnalyticPixel transform_pixel_rgb(RGBAnalyticPixel p) {
-        float red_out = (p.red * matrix_entries[0]) +
+        double red_out = (p.red * matrix_entries[0]) +
             (p.green * matrix_entries[1]) +
             (p.blue * matrix_entries[2]) +
             matrix_entries[3];
-        red_out = red_out.clamp(0.0f, 1.0f);
+        red_out = red_out.clamp(0.0, 1.0f);
 
-        float green_out = (p.red * matrix_entries[4]) +
+        double green_out = (p.red * matrix_entries[4]) +
             (p.green * matrix_entries[5]) +
             (p.blue * matrix_entries[6]) +
             matrix_entries[7];
-        green_out = green_out.clamp(0.0f, 1.0f);
+        green_out = green_out.clamp(0.0, 1.0f);
 
-        float blue_out = (p.red * matrix_entries[8]) +
+        double blue_out = (p.red * matrix_entries[8]) +
             (p.green * matrix_entries[9]) +
             (p.blue * matrix_entries[10]) +
             matrix_entries[11];
-        blue_out = blue_out.clamp(0.0f, 1.0f);
+        blue_out = blue_out.clamp(0.0, 1.0f);
         
         return RGBAnalyticPixel.from_components(red_out, green_out, blue_out);
     }
@@ -607,19 +607,19 @@ public abstract class HSVTransformation : PixelTransformation {
 }
 
 public class TintTransformation : RGBTransformation {
-    private const float INTENSITY_FACTOR = 0.25f;
-    public const float MIN_PARAMETER = -16.0f;
-    public const float MAX_PARAMETER = 16.0f;
+    private const double INTENSITY_FACTOR = 0.25f;
+    public const double MIN_PARAMETER = -16.0;
+    public const double MAX_PARAMETER = 16.0;
     
-    private float parameter;
+    private double parameter;
 
-    public TintTransformation(float client_param) {
+    public TintTransformation(double client_param) {
         base(PixelTransformationType.TINT);
         
         parameter = client_param.clamp(MIN_PARAMETER, MAX_PARAMETER);
 
-         if (parameter != 0.0f) {
-             float adjusted_param = parameter / MAX_PARAMETER;
+         if (parameter != 0.0) {
+             double adjusted_param = parameter / MAX_PARAMETER;
              adjusted_param *= INTENSITY_FACTOR;
              
              matrix_entries[11] -= (adjusted_param / 2);
@@ -630,25 +630,25 @@ public class TintTransformation : RGBTransformation {
          }
     }
 
-    public float get_parameter() {
+    public double get_parameter() {
         return parameter;
     }
 }
 
 public class TemperatureTransformation : RGBTransformation {
-    private const float INTENSITY_FACTOR = 0.33f;
-    public const float MIN_PARAMETER = -16.0f;
-    public const float MAX_PARAMETER = 16.0f;
+    private const double INTENSITY_FACTOR = 0.33f;
+    public const double MIN_PARAMETER = -16.0;
+    public const double MAX_PARAMETER = 16.0;
     
-    private float parameter;
+    private double parameter;
 
-    public TemperatureTransformation(float client_parameter) {
+    public TemperatureTransformation(double client_parameter) {
         base(PixelTransformationType.TEMPERATURE);
         
         parameter = client_parameter.clamp(MIN_PARAMETER, MAX_PARAMETER);
         
-         if (parameter != 0.0f) {
-             float adjusted_param = parameter / MAX_PARAMETER;
+         if (parameter != 0.0) {
+             double adjusted_param = parameter / MAX_PARAMETER;
              adjusted_param *= INTENSITY_FACTOR;
              
              matrix_entries[11] -= adjusted_param;
@@ -659,66 +659,66 @@ public class TemperatureTransformation : RGBTransformation {
          }
     }
 
-    public float get_parameter() {
+    public double get_parameter() {
         return parameter;
     }
 }
 
 public class SaturationTransformation : RGBTransformation {
-    public const float MIN_PARAMETER = -16.0f;
-    public const float MAX_PARAMETER = 16.0f;
+    public const double MIN_PARAMETER = -16.0;
+    public const double MAX_PARAMETER = 16.0;
     
-    private float parameter;
+    private double parameter;
 
-    public SaturationTransformation(float client_parameter) {
+    public SaturationTransformation(double client_parameter) {
         base(PixelTransformationType.SATURATION);
         
         parameter = client_parameter.clamp(MIN_PARAMETER, MAX_PARAMETER);
 
-        if (parameter != 0.0f) {
-            float adjusted_param = parameter / MAX_PARAMETER;
-            adjusted_param += 1.0f;
+        if (parameter != 0.0) {
+            double adjusted_param = parameter / MAX_PARAMETER;
+            adjusted_param += 1.0;
 
-            float one_third = 0.3333333f;
+            double one_third = 0.3333333f;
 
-            matrix_entries[0] = ((1.0f - adjusted_param) * one_third) +
+            matrix_entries[0] = ((1.0 - adjusted_param) * one_third) +
                 adjusted_param;
-            matrix_entries[1] = (1.0f - adjusted_param) * one_third;
-            matrix_entries[2] = (1.0f - adjusted_param) * one_third;
+            matrix_entries[1] = (1.0 - adjusted_param) * one_third;
+            matrix_entries[2] = (1.0 - adjusted_param) * one_third;
 
-            matrix_entries[4] = (1.0f - adjusted_param) * one_third;
-            matrix_entries[5] = ((1.0f - adjusted_param) * one_third) +
+            matrix_entries[4] = (1.0 - adjusted_param) * one_third;
+            matrix_entries[5] = ((1.0 - adjusted_param) * one_third) +
                 adjusted_param;
-            matrix_entries[6] = (1.0f - adjusted_param) * one_third;
+            matrix_entries[6] = (1.0 - adjusted_param) * one_third;
 
-            matrix_entries[8] = (1.0f - adjusted_param) * one_third;
-            matrix_entries[9] = (1.0f - adjusted_param) * one_third;
-            matrix_entries[10] = ((1.0f - adjusted_param) * one_third) +
+            matrix_entries[8] = (1.0 - adjusted_param) * one_third;
+            matrix_entries[9] = (1.0 - adjusted_param) * one_third;
+            matrix_entries[10] = ((1.0 - adjusted_param) * one_third) +
                 adjusted_param;
 
             identity = false;
         }
     }
 
-    public float get_parameter() {
+    public double get_parameter() {
         return parameter;
     }
 }
 
 public class ExposureTransformation : RGBTransformation {
-    public const float MIN_PARAMETER = -16.0f;
-    public const float MAX_PARAMETER = 16.0f;
+    public const double MIN_PARAMETER = -16.0;
+    public const double MAX_PARAMETER = 16.0;
 
-    float parameter;
+    double parameter;
 
-    public ExposureTransformation(float client_parameter) {
+    public ExposureTransformation(double client_parameter) {
         base(PixelTransformationType.EXPOSURE);
         
         parameter = client_parameter.clamp(MIN_PARAMETER, MAX_PARAMETER);
 
-        if (parameter != 0.0f) {
+        if (parameter != 0.0) {
 
-            float adjusted_param = ((parameter + 16.0f) / 32.0f) + 0.5f;
+            double adjusted_param = ((parameter + 16.0) / 32.0f) + 0.5f;
 
             matrix_entries[0] = adjusted_param;
             matrix_entries[5] = adjusted_param;
@@ -728,29 +728,29 @@ public class ExposureTransformation : RGBTransformation {
         }
     }
 
-    public float get_parameter() {
+    public double get_parameter() {
         return parameter;
     }
 }
 
 public class ContrastTransformation : RGBTransformation {
-    public const float MIN_PARAMETER = -16.0f;
-    public const float MAX_PARAMETER = 16.0f;
+    public const double MIN_PARAMETER = -16.0;
+    public const double MAX_PARAMETER = 16.0;
 
-    const float MAX_CONTRAST_ADJUSTMENT = 0.5f;  // must be less than 1.0
+    const double MAX_CONTRAST_ADJUSTMENT = 0.5;  // must be less than 1.0
 
-    float parameter;
+    double parameter;
 
-    public ContrastTransformation(float client_parameter) {
+    public ContrastTransformation(double client_parameter) {
         base(PixelTransformationType.CONTRAST);
 
         parameter = client_parameter.clamp(MIN_PARAMETER, MAX_PARAMETER);
 
-        if (parameter != 0.0f) {
+        if (parameter != 0.0) {
 
-            float contrast_adjustment = (parameter / 16.0f) * MAX_CONTRAST_ADJUSTMENT;
-            float component_coefficient = 1.0f + contrast_adjustment;
-            float component_offset = contrast_adjustment / -2.0f;
+            double contrast_adjustment = (parameter / 16.0) * MAX_CONTRAST_ADJUSTMENT;
+            double component_coefficient = 1.0 + contrast_adjustment;
+            double component_offset = contrast_adjustment / -2.0;
 
             matrix_entries[0] = component_coefficient;
             matrix_entries[5] = component_coefficient;
@@ -764,7 +764,7 @@ public class ContrastTransformation : RGBTransformation {
         }
     }
 
-    public float get_parameter() {
+    public double get_parameter() {
         return parameter;
     }
 }
@@ -877,7 +877,7 @@ public class PixelTransformer {
         transform_to_other_pixbuf(pixbuf, pixbuf, cancellable);
     }
 
-    public void transform_from_fp(ref float[] fp_pixel_cache, Gdk.Pixbuf dest) {
+    public void transform_from_fp(ref double[] fp_pixel_cache, Gdk.Pixbuf dest) {
         if (optimized_transformations == null)
             build_optimized_transformations();
 
@@ -902,9 +902,9 @@ public class PixelTransformer {
 
                 pixel = apply_transformations(pixel);
 
-                dest_pixels[i] = (uchar) (pixel.red * 255.0f);
-                dest_pixels[i + 1] = (uchar) (pixel.green * 255.0f);
-                dest_pixels[i + 2] = (uchar) (pixel.blue * 255.0f);
+                dest_pixels[i] = (uchar) (pixel.red * 255.0);
+                dest_pixels[i + 1] = (uchar) (pixel.green * 255.0);
+                dest_pixels[i + 2] = (uchar) (pixel.blue * 255.0);
             }
         }
     }
@@ -1211,8 +1211,8 @@ public class RGBHistogram {
 
 public class IntensityHistogram {
     private int[] counts = new int[256];
-    private float[] probabilities = new float[256];
-    private float[] cumulative_probabilities = new float[256];
+    private double[] probabilities = new double[256];
+    private double[] cumulative_probabilities = new double[256];
 
     public IntensityHistogram(Gdk.Pixbuf pixbuf) {
         int n_channels = pixbuf.get_n_channels();
@@ -1228,21 +1228,21 @@ public class IntensityHistogram {
                 RGBAnalyticPixel pix_rgb = RGBAnalyticPixel.from_quantized_components(
                     pixels[i], pixels[i + 1], pixels[i + 2]);
                 HSVAnalyticPixel pix_hsi = HSVAnalyticPixel.from_rgb(pix_rgb);
-                int quantized_light_value = (int)(pix_hsi.light_value * 255.0f);
+                int quantized_light_value = (int)(pix_hsi.light_value * 255.0);
                 counts[quantized_light_value] += 1;
             }
         }    
 
-        float pixel_count = (float)(pixbuf.width * pixbuf.height);
-        float accumulator = 0.0f;
+        double pixel_count = (double)(pixbuf.width * pixbuf.height);
+        double accumulator = 0.0;
         for (int i = 0; i < 256; i++) {
-            probabilities[i] = ((float) counts[i]) / pixel_count;
+            probabilities[i] = ((double) counts[i]) / pixel_count;
             accumulator += probabilities[i];
             cumulative_probabilities[i] = accumulator;
         }
     }
 
-    public float get_cumulative_probability(int level) {
+    public double get_cumulative_probability(int level) {
         // clamp out-of-range pixels to prevent crashing. 
         level = level.clamp(0, 255);
         return cumulative_probabilities[level];
@@ -1250,9 +1250,9 @@ public class IntensityHistogram {
 }
 
 public class ExpansionTransformation : HSVTransformation {
-    private float[] remap_table = null;
-    private const float LOW_DISCARD_MASS = 0.02f;
-    private const float HIGH_DISCARD_MASS = 0.02f;
+    private double[] remap_table = null;
+    private const double LOW_DISCARD_MASS = 0.02f;
+    private const double HIGH_DISCARD_MASS = 0.02f;
 
     private int low_kink;
     private int high_kink;
@@ -1260,14 +1260,14 @@ public class ExpansionTransformation : HSVTransformation {
     public ExpansionTransformation(IntensityHistogram histogram) {
         base(PixelTransformationType.TONE_EXPANSION);
         
-        remap_table = new float[256];
+        remap_table = new double[256];
 
-        float LOW_KINK_MASS = LOW_DISCARD_MASS;
+        double LOW_KINK_MASS = LOW_DISCARD_MASS;
         low_kink = 0;
         while (histogram.get_cumulative_probability(low_kink) < LOW_KINK_MASS)
             low_kink++;
         
-        float HIGH_KINK_MASS = 1.0f - HIGH_DISCARD_MASS;
+        double HIGH_KINK_MASS = 1.0 - HIGH_DISCARD_MASS;
         high_kink = 255;
         while ((histogram.get_cumulative_probability(high_kink) > HIGH_KINK_MASS) && (high_kink > 0))
                  high_kink--;
@@ -1313,32 +1313,32 @@ public class ExpansionTransformation : HSVTransformation {
 
     private void build_remap_table() {
         if (remap_table == null)
-            remap_table = new float[256];
+            remap_table = new double[256];
 
-        float low_kink_f = ((float) low_kink) / 255.0f;
-        float high_kink_f = ((float) high_kink) / 255.0f;
+        double low_kink_f = ((double) low_kink) / 255.0;
+        double high_kink_f = ((double) high_kink) / 255.0;
 
-        float slope = 1.0f / (high_kink_f - low_kink_f);
-        float intercept = -(low_kink_f / (high_kink_f - low_kink_f));
+        double slope = 1.0 / (high_kink_f - low_kink_f);
+        double intercept = -(low_kink_f / (high_kink_f - low_kink_f));
         
         int i = 0;
         for ( ; i <= low_kink; i++)
-            remap_table[i] = 0.0f;
+            remap_table[i] = 0.0;
         
         for ( ; i < high_kink; i++)
-            remap_table[i] = slope * (((float) i) / 255.0f) + intercept;
+            remap_table[i] = slope * (((double) i) / 255.0) + intercept;
         
         for ( ; i < 256; i++)
-            remap_table[i] = 1.0f;
+            remap_table[i] = 1.0;
     }
 
     public override HSVAnalyticPixel transform_pixel_hsv(HSVAnalyticPixel pixel) {
-        int remap_index = (int)(pixel.light_value * 255.0f);
+        int remap_index = (int)(pixel.light_value * 255.0);
 
         HSVAnalyticPixel result = pixel;
         result.light_value = remap_table[remap_index];
 
-        result.light_value = result.light_value.clamp(0.0f, 1.0f);
+        result.light_value = result.light_value.clamp(0.0, 1.0f);
 
         return result;
     }
@@ -1365,38 +1365,38 @@ public class ExpansionTransformation : HSVTransformation {
 }
 
 public class ShadowDetailTransformation : HSVTransformation {
-    private const float MAX_EFFECT_SHIFT = 0.5f;
-    private const float MIN_TONAL_WIDTH = 0.1f;
-    private const float MAX_TONAL_WIDTH = 1.0f;
-    private const float TONAL_WIDTH = 1.0f;
+    private const double MAX_EFFECT_SHIFT = 0.5;
+    private const double MIN_TONAL_WIDTH = 0.1;
+    private const double MAX_TONAL_WIDTH = 1.0;
+    private const double TONAL_WIDTH = 1.0;
 
-    private float intensity = 0.0f;
-    private float[] remap_table = null;
+    private double intensity = 0.0;
+    private double[] remap_table = null;
     
-    public const float MIN_PARAMETER = 0.0f;
-    public const float MAX_PARAMETER = 32.0f;
+    public const double MIN_PARAMETER = 0.0;
+    public const double MAX_PARAMETER = 32.0;
 
-    public ShadowDetailTransformation(float user_intensity) {
+    public ShadowDetailTransformation(double user_intensity) {
         base(PixelTransformationType.SHADOWS);
         
         intensity = user_intensity;
-        float intensity_adj = (intensity / MAX_PARAMETER).clamp(0.0f, 1.0f);
+        double intensity_adj = (intensity / MAX_PARAMETER).clamp(0.0, 1.0f);
 
-        float effect_shift = MAX_EFFECT_SHIFT * intensity_adj;
+        double effect_shift = MAX_EFFECT_SHIFT * intensity_adj;
         HermiteGammaApproximationFunction func =
             new HermiteGammaApproximationFunction(TONAL_WIDTH);
         
-        remap_table = new float[256];
+        remap_table = new double[256];
         for (int i = 0; i < 256; i++) {
-            float x = ((float) i) / 255.0f;
-            float weight = func.evaluate(x);
-            remap_table[i] = (weight * (x + effect_shift)) + ((1.0f - weight) * x);
+            double x = ((double) i) / 255.0;
+            double weight = func.evaluate(x);
+            remap_table[i] = (weight * (x + effect_shift)) + ((1.0 - weight) * x);
         }
     }
 
     public override HSVAnalyticPixel transform_pixel_hsv(HSVAnalyticPixel pixel) {
         HSVAnalyticPixel result = pixel;
-        result.light_value = (remap_table[(int)(pixel.light_value * 255.0f)]).clamp(0.0f, 1.0f);
+        result.light_value = (remap_table[(int)(pixel.light_value * 255.0)]).clamp(0.0f, 1.0f);
         return result;
     }
 
@@ -1405,72 +1405,72 @@ public class ShadowDetailTransformation : HSVTransformation {
     }
     
     public override bool is_identity() {
-        return (intensity == 0.0f);
+        return (intensity == 0.0);
     }
 
-    public float get_parameter() {
+    public double get_parameter() {
         return intensity;
     }
 }
 
 public class HermiteGammaApproximationFunction {
-    private float x_scale = 1.0f;
-    private float nonzero_interval_upper = 1.0f;
+    private double x_scale = 1.0;
+    private double nonzero_interval_upper = 1.0;
     
-    public HermiteGammaApproximationFunction(float user_interval_upper) {
-        nonzero_interval_upper = user_interval_upper.clamp(0.1f, 1.0f);
-        x_scale = 1.0f / nonzero_interval_upper;
+    public HermiteGammaApproximationFunction(double user_interval_upper) {
+        nonzero_interval_upper = user_interval_upper.clamp(0.1, 1.0f);
+        x_scale = 1.0 / nonzero_interval_upper;
     }
     
-    public float evaluate(float x) {
-        if (x < 0.0f)
-            return 0.0f;
+    public double evaluate(double x) {
+        if (x < 0.0)
+            return 0.0;
         else if (x > nonzero_interval_upper)
-            return 0.0f;
+            return 0.0;
         else {
-            float indep_var = x_scale * x;
+            double indep_var = x_scale * x;
             
-            float dep_var =  6.0f * ((indep_var * indep_var * indep_var) -
-                (2.0f * (indep_var * indep_var)) + (indep_var));
+            double dep_var =  6.0 * ((indep_var * indep_var * indep_var) -
+                (2.0 * (indep_var * indep_var)) + (indep_var));
             
-            return dep_var.clamp(0.0f, 1.0f);
+            return dep_var.clamp(0.0, 1.0f);
         }
     }
 }
 
 public class HighlightDetailTransformation : HSVTransformation {
-    private const float MAX_EFFECT_SHIFT = 0.5f;
-    private const float MIN_TONAL_WIDTH = 0.1f;
-    private const float MAX_TONAL_WIDTH = 1.0f;
-    private const float TONAL_WIDTH = 1.0f;
+    private const double MAX_EFFECT_SHIFT = 0.5;
+    private const double MIN_TONAL_WIDTH = 0.1;
+    private const double MAX_TONAL_WIDTH = 1.0;
+    private const double TONAL_WIDTH = 1.0;
 
-    private float intensity = 0.0f;
-    private float[] remap_table = null;
+    private double intensity = 0.0;
+    private double[] remap_table = null;
     
-    public const float MIN_PARAMETER = -32.0f;
-    public const float MAX_PARAMETER = 0.0f;
+    public const double MIN_PARAMETER = -32.0;
+    public const double MAX_PARAMETER = 0.0;
 
-    public HighlightDetailTransformation(float user_intensity) {
+    public HighlightDetailTransformation(double user_intensity) {
         base(PixelTransformationType.HIGHLIGHTS);
         
         intensity = user_intensity;
-        float intensity_adj = (intensity / MIN_PARAMETER).clamp(0.0f, 1.0f);
+        double intensity_adj = (intensity / MIN_PARAMETER).clamp(0.0, 1.0f);
 
-        float effect_shift = MAX_EFFECT_SHIFT * intensity_adj;
+        double effect_shift = MAX_EFFECT_SHIFT * intensity_adj;
         HermiteGammaApproximationFunction func =
             new HermiteGammaApproximationFunction(TONAL_WIDTH);
         
-        remap_table = new float[256];
+        remap_table = new double[256];
         for (int i = 0; i < 256; i++) {
-            float x = ((float) i) / 255.0f;
-            float weight = func.evaluate(1.0f - x);
-            remap_table[i] = (weight * (x - effect_shift)) + ((1.0f - weight) * x);
+            double x = ((double) i) / 255.0;
+            double weight = func.evaluate(1.0 - x);
+            remap_table[i] = (weight * (x - effect_shift)) + ((1.0 - weight) * x);
         }
     }
 
     public override HSVAnalyticPixel transform_pixel_hsv(HSVAnalyticPixel pixel) {
         HSVAnalyticPixel result = pixel;
-        result.light_value = (remap_table[(int)(pixel.light_value * 255.0f)]).clamp(0.0f, 1.0f);
+        result.light_value = (remap_table[(int)(pixel.light_value * 255.0)]).clamp(0.0f, 1.0f);
         return result;
     }
 
@@ -1479,10 +1479,10 @@ public class HighlightDetailTransformation : HSVTransformation {
     }
     
     public override bool is_identity() {
-        return (intensity == 0.0f);
+        return (intensity == 0.0);
     }
 
-    public float get_parameter() {
+    public double get_parameter() {
         return intensity;
     }
 }
@@ -1492,8 +1492,8 @@ namespace AutoEnhance {
     const int SHADOW_DETECT_MAX_INTENSITY = 100;
     const int SHADOW_DETECT_INTENSITY_RANGE = SHADOW_DETECT_MAX_INTENSITY -
             SHADOW_DETECT_MIN_INTENSITY;
-    const float SHADOW_MODE_HIGH_DISCARD_MASS = 0.02f;
-    const float SHADOW_AGGRESSIVENESS_MUL = 0.4f;
+    const double SHADOW_MODE_HIGH_DISCARD_MASS = 0.02f;
+    const double SHADOW_AGGRESSIVENESS_MUL = 0.4;
     const int EMPIRICAL_DARK = 30;
 
 public PixelTransformationBundle create_auto_enhance_adjustments(Gdk.Pixbuf pixbuf) {
@@ -1502,15 +1502,15 @@ public PixelTransformationBundle create_auto_enhance_adjustments(Gdk.Pixbuf pixb
     IntensityHistogram analysis_histogram = new IntensityHistogram(pixbuf);
     /* compute the percentage of pixels in the image that fall into the shadow range --
        this measures "of the pixels in the image, how many of them are in shadow?" */
-    float pct_in_range =
-        100.0f *(analysis_histogram.get_cumulative_probability(SHADOW_DETECT_MAX_INTENSITY) -
+    double pct_in_range =
+        100.0 *(analysis_histogram.get_cumulative_probability(SHADOW_DETECT_MAX_INTENSITY) -
         analysis_histogram.get_cumulative_probability(SHADOW_DETECT_MIN_INTENSITY));
 
     /* compute the mean intensity of the pixels that are in the shadow range -- this measures
        "of those pixels that are in shadow, just how dark are they?" */
-    float shadow_range_mean_prob_val =
+    double shadow_range_mean_prob_val =
         (analysis_histogram.get_cumulative_probability(SHADOW_DETECT_MIN_INTENSITY) +
-        analysis_histogram.get_cumulative_probability(SHADOW_DETECT_MAX_INTENSITY)) * 0.5f;
+        analysis_histogram.get_cumulative_probability(SHADOW_DETECT_MAX_INTENSITY)) * 0.5;
     int shadow_mean_intensity = SHADOW_DETECT_MIN_INTENSITY;
     for ( ; shadow_mean_intensity <= SHADOW_DETECT_MAX_INTENSITY; shadow_mean_intensity++) {
         if (analysis_histogram.get_cumulative_probability(shadow_mean_intensity) >= shadow_range_mean_prob_val)
@@ -1522,9 +1522,9 @@ public PixelTransformationBundle create_auto_enhance_adjustments(Gdk.Pixbuf pixb
        determined threshold below which pixels appear very dark), regardless of the
        percent of pixels in it, then perform shadow detail enhancement. Otherwise,
        skip shadow detail enhancement and perform a traditional contrast expansion */
-    if ((pct_in_range > 40.0f) || (pct_in_range > 20.0f) && (shadow_mean_intensity < EMPIRICAL_DARK)) {
-        float shadow_trans_effect_size = ((((float) SHADOW_DETECT_MAX_INTENSITY) -
-            ((float) shadow_mean_intensity)) / ((float) SHADOW_DETECT_INTENSITY_RANGE)) *
+    if ((pct_in_range > 40.0) || (pct_in_range > 20.0f) && (shadow_mean_intensity < EMPIRICAL_DARK)) {
+        double shadow_trans_effect_size = ((((double) SHADOW_DETECT_MAX_INTENSITY) -
+            ((double) shadow_mean_intensity)) / ((double) SHADOW_DETECT_INTENSITY_RANGE)) *
             ShadowDetailTransformation.MAX_PARAMETER;
 
         shadow_trans_effect_size *= SHADOW_AGGRESSIVENESS_MUL;
@@ -1535,7 +1535,7 @@ public PixelTransformationBundle create_auto_enhance_adjustments(Gdk.Pixbuf pixb
            but only on the top end */
         int discard_point = 255;
         for ( ; discard_point > -1; discard_point--) {
-            if ((1.0f - analysis_histogram.get_cumulative_probability(discard_point)) >
+            if ((1.0 - analysis_histogram.get_cumulative_probability(discard_point)) >
                 SHADOW_MODE_HIGH_DISCARD_MASS)
                     break;
         }
@@ -1548,12 +1548,12 @@ public PixelTransformationBundle create_auto_enhance_adjustments(Gdk.Pixbuf pixb
     }
     /* zero out any existing color transformations as these may conflict with
        auto-enhancement */
-    adjustments.set(new HighlightDetailTransformation(0.0f));
-    adjustments.set(new TemperatureTransformation(0.0f));
-    adjustments.set(new TintTransformation(0.0f));
-    adjustments.set(new ExposureTransformation(0.0f));
-    adjustments.set(new ContrastTransformation(0.0f));
-    adjustments.set(new SaturationTransformation(0.0f));
+    adjustments.set(new HighlightDetailTransformation(0.0));
+    adjustments.set(new TemperatureTransformation(0.0));
+    adjustments.set(new TintTransformation(0.0));
+    adjustments.set(new ExposureTransformation(0.0));
+    adjustments.set(new ContrastTransformation(0.0));
+    adjustments.set(new SaturationTransformation(0.0));
     
     return adjustments;
 }
