@@ -87,17 +87,17 @@ dnl ***********************************************************************
 dnl Check for authenticator
 dnl ***********************************************************************
 AC_ARG_WITH([authenticator],
-            AS_HELP_STRING([--with-authenticator=@<:@shotwell@:>@]
+            AS_HELP_STRING([--with-authenticator=@<:@shotwell,uoa@:>@]
                            [Which authentication back-end to use (defaul: shotwell)]),
                            [with_authenticator=$withval],
                            [with_authenticator=shotwell])
-AS_IF([test "x$with_authenticator" != "xshotwell"],
+AS_IF([test "x$with_authenticator" != "xshotwell" &&
+       test "x$with_authenticator" != "xuoa"],
             [AC_MSG_NOTICE([Unknown authenticator $[]with_authenticator, using shotwell])
              with_authenticator="shotwell"
             ])
 
 AM_CONDITIONAL([AUTHENTICATOR_SHOTWELL],[test "x$with_authenticator" = "xshotwell"])
-AM_CONDITIONAL([AUTHENTICATOR_GOA],[test "x$with_authenticator" = "xgoa"])
 AM_CONDITIONAL([AUTHENTICATOR_UOA],[test "x$with_authenticator" = "xuoa"])
 
 dnl ***********************************************************************
