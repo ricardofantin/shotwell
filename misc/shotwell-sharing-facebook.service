@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service id="shotwell-sharing-facebook">
+  <type>shotwell-sharing</type>
+  <name>Facebook</name>
+  <icon>facebook</icon>
+  <provider>facebook</provider>
+  <template>
+    <group name="auth/oauth2/user_agent">
+      <setting type="as" name="Scope">['publish_actions','user_photos','user_videos']</setting>
+      <setting name="ClientId">1612018629063184</setting>
+    </group>
+  </template>
+</service>
