@@ -57,12 +57,13 @@ public enum PhotoFileFormat {
     PNG,
     TIFF,
     BMP,
+    WEBP,
     UNKNOWN;
     
     // This is currently listed in the order of detection, that is, the file is examined from
     // left to right.  (See PhotoFileInterrogator.)
     public static PhotoFileFormat[] get_supported() {
-        return { JFIF, RAW, PNG, TIFF, BMP };
+        return { JFIF, RAW, PNG, TIFF, BMP, WEBP };
     }
     
     public static PhotoFileFormat[] get_writeable() {
@@ -138,6 +139,9 @@ public enum PhotoFileFormat {
             case BMP:
                 return 4;
             
+            case WEBP:
+                return 5;
+
             case UNKNOWN:
             default:
                 return -1;
@@ -161,6 +165,9 @@ public enum PhotoFileFormat {
 
             case 4:
                 return BMP;
+
+            case 5:
+                return WEBP;
                             
             default:
                 return UNKNOWN;
@@ -233,6 +240,10 @@ public enum PhotoFileFormat {
                 Photos.BmpFileFormatDriver.init();
                 break;
 
+            case WEBP:
+                Photos.WebpFileFormatDriver.init();
+                break;
+
             default:
                 error("Unsupported file format %s", this.to_string());
         }
@@ -254,6 +265,9 @@ public enum PhotoFileFormat {
             
             case BMP:
                 return Photos.BmpFileFormatDriver.get_instance();
+
+            case WEBP:
+                return Photos.WebpFileFormatDriver.get_instance();
 
             default:
                 error("Unsupported file format %s", this.to_string());
