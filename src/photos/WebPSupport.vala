@@ -101,8 +101,11 @@ private class WebpFileFormatProperties : PhotoFileFormatProperties {
 }
 
 private class WebpSniffer : PhotoFileSniffer {
+    private DetectedPhotoInformation detected = null;
+
     public WebpSniffer(File file, PhotoFileSniffer.Options options) {
         base (file, options);
+        detected = new DetectedPhotoInformation();
     }
 
     public override DetectedPhotoInformation? sniff(out bool is_corrupted) throws Error {
@@ -112,14 +115,74 @@ private class WebpSniffer : PhotoFileSniffer {
         if (!is_webp(file))
             return null;
 
-        var info = new DetectedPhotoInformation();
-        info.file_format = PhotoFileFormat.WEBP;
-        info.format_name = "WebP";
-        info.channels = 4;
-        info.bits_per_channel = 8;
-        info.image_dim = new Dimensions(32, 32);
+         // valac chokes on the ternary operator here
+        Checksum? md5_checksum = null;
+        if (calc_md5)
+            md5_checksum = new Checksum(ChecksumType.MD5);
 
-        return info;
+        detected.metadata = new PhotoMetadata();
+        try {
+            detected.metadata.read_from_file(file);
+        } catch (Error err) {
+            // no metadata detected
+            detected.metadata = null;
+        }
+
+        if (calc_md5 && detected.metadata != null) {
+            detected.exif_md5 = detected.metadata.exif_hash();
+            detected.thumbnail_md5 = detected.metadata.thumbnail_hash();
+        }
+
+        // if no MD5, don't read as much, as the needed info will probably be gleaned
+        // in the first 8K to 16K
+        uint8[] buffer = calc_md5 ? new uint8[64 * 1024] : new uint8[8 * 1024];
+        size_t count = 0;
+
+        // loop through until all conditions we're searching for are met
+        FileInputStream fins = file.read(null);
+        var ba = new ByteArray();
+        for (;;) {
+            size_t bytes_read = fins.read(buffer, null);
+            if (bytes_read <= 0)
+                break;
+
+            ba.append(buffer[0:bytes_read]);
+
+            count += bytes_read;
+
+            if (calc_md5)
+                md5_checksum.update(buffer, bytes_read);
+
+            WebP.Data d = WebP.Data();
+            d.bytes = ba.data;
+
+            WebP.ParsingState state;
+            var demux = new WebP.Demuxer.partial(d, out state);
+
+            if (state > WebP.ParsingState.PARSED_HEADER) {
+                detected.file_format = PhotoFileFormat.WEBP;
+                detected.format_name = "WebP";
+                detected.channels = 4;
+                detected.bits_per_channel = 8;
+                detected.image_dim.width = (int) demux.get(WebP.FormatFeature.CANVAS_WIDTH);
+                detected.image_dim.height = (int) demux.get(WebP.FormatFeature.CANVAS_HEIGHT);
+
+                // if not searching for anything else, exit
+                if (!calc_md5)
+                    break;
+                }
+        }
+
+        if (fins != null)
+            fins.close(null);
+
+        if (calc_md5)
+            detected.md5 = md5_checksum.get_string();
+
+        // if size and area are not ready, treat as corrupted file (entire file was read)
+        is_corrupted = false; //!size_ready || !area_prepared;
+
+        return detected;
     }
 }
 
@@ -136,7 +199,14 @@ private class WebpReader : PhotoFileReader {
     }
 
     public override Gdk.Pixbuf unscaled_read() throws Error {
-        return new Gdk.Pixbuf(Gdk.Colorspace.RGB, true, 8, 32, 32);
+        uint8[] buffer;
+
+        FileUtils.get_data(this.get_filepath(), out buffer);
+        int width, height;
+        var pixdata = WebP.DecodeRGBA(buffer, out width, out height);
+        pixdata.length = width * height * 4;
+
+        return new Gdk.Pixbuf.from_data(pixdata, Gdk.Colorspace.RGB, true, 8, width, height, width * 4);
     }
 }
 
