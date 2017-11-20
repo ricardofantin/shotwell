@@ -1313,8 +1313,8 @@ internal class GraphSession {
                 break;
                 
                 case EXPIRED_SESSION_STATUS_CODE:
-                    error = new Spit.Publishing.PublishingError.EXPIRED_SESSION(
-                        "OAuth Access Token has Expired. Logout user.", get_uri(), msg.status_code);
+                    /*error = new Spit.Publishing.PublishingError.EXPIRED_SESSION(
+                        "OAuth Access Token has Expired. Logout user.", get_uri(), msg.status_code);*/
                 break;
                 
                 case Soup.KnownStatusCode.CANT_RESOLVE:

@@ -111,6 +111,13 @@ public class Argument {
     }
     
     public static Argument[] sort(Argument[] inputArray) {
+    	Argument sorted[] = inputArray;
+//list.sort((a,b) => {
+//    return a.ascii_casecmp(b);
+//});
+        //sorted.sort((a,b) => {
+        //    return strcmp(((Argument*)a)->key, ((Argument*)b)->key);
+        //});
         Gee.TreeSet<Argument> sorted_args = new Gee.TreeSet<Argument>(Argument.compare);
 
         foreach (Argument arg in inputArray)
@@ -442,7 +449,8 @@ public class UploadTransaction : Transaction {
             soup_form_request_new_from_multipart(get_endpoint_url(), message_parts);
         // TODO: there must be a better way to iterate over a map
         Gee.MapIterator<string, string> i = message_headers.map_iterator();
-        bool cont = i.first();
+        //Gee.
+        bool cont = i.next();// i.first();
         while(cont) {
             outbound_message.request_headers.append(i.get_key(), i.get_value());
             cont = i.next();
@@ -466,7 +474,8 @@ public class XmlDocument {
         document = doc;
     }
 
-    ~RESTXmlDocument() {
+//    ~RESTXmlDocument() {
+    ~XmlDocument() {
         delete document;
     }
 
