@@ -12,6 +12,8 @@
       <file preprocess="xml-stripblanks">ui/import_queue.ui</file>
       <file preprocess="xml-stripblanks">ui/import.ui</file>
       <file preprocess="xml-stripblanks">ui/media.ui</file>
+      <file preprocess="xml-stripblanks">ui/multitextentrydialog.ui</file>
+      <file preprocess="xml-stripblanks">ui/manifest_widget.ui</file>
       <file preprocess="xml-stripblanks">ui/offline.ui</file>
       <file preprocess="xml-stripblanks">ui/photo_context.ui</file>
       <file preprocess="xml-stripblanks">ui/photo.ui</file>
@@ -25,8 +27,10 @@
       <file compressed="true">ui/shotwell.ui</file>
       <file preprocess="xml-stripblanks">ui/sidebar_default_context.ui</file>
       <file preprocess="xml-stripblanks">ui/slideshow_settings.ui</file>
+      <file preprocess="xml-stripblanks">ui/saved_search_dialog.ui</file>
       <file preprocess="xml-stripblanks">ui/tag_sidebar_context.ui</file>
       <file preprocess="xml-stripblanks">ui/tags.ui</file>
+      <file preprocess="xml-stripblanks">ui/textentrydialog.ui</file>
       <file preprocess="xml-stripblanks">ui/trash.ui</file>
       <!-- Icons -->
       <file>icons/about-aachen.jpg</file>

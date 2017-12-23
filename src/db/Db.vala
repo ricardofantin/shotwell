@@ -207,7 +207,7 @@ private VerifyResult upgrade_database(int input_version) {
 
     if (!DatabaseTable.has_column("EventTable", "primary_source_id")) {
         message("upgrade_database: adding primary_source_id column to EventTable");
-        if (!DatabaseTable.add_column("EventTable", "primary_source_id", "INTEGER DEFAULT 0"))
+        if (!DatabaseTable.add_column("EventTable", "primary_source_id", "TEXT"))
             return VerifyResult.UPGRADE_ERROR;
     }
     
@@ -304,7 +304,7 @@ private VerifyResult upgrade_database(int input_version) {
         if (!DatabaseTable.add_column("PhotoTable", "comment", "TEXT"))
             return VerifyResult.UPGRADE_ERROR;
     }
-    if (!DatabaseTable.has_column("VideoTable", "comment")) {
+    if (DatabaseTable.has_table("VideoTable") & !DatabaseTable.has_column("VideoTable", "comment")) {
         message("upgrade_database: adding comment column to VideoTable");
         if (!DatabaseTable.add_column("VideoTable", "comment", "TEXT"))
             return VerifyResult.UPGRADE_ERROR;
