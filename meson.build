@@ -81,11 +81,9 @@ if get_option('disable-dupe-detection')
   add_global_arguments(['--define=NO_DUPE_DETECTION'], language : vala)
 endif
 
-face_resources = (['main.vala']) #hack to avoid error when no face option used
 if get_option('face')
   add_global_arguments(['--define=ENABLE_FACES'], language : 'vala')
   subdir('facedetect')
-  face_resources = (['faces/FacesBranch.vala', 'faces/FaceLocation.vala', 'faces/FacePage.vala', 'faces/FaceShape.vala', 'faces/Faces.vala', 'faces/Face.vala', 'db/FaceLocationTable.vala', 'db/FaceTable.vala'])
 endif
 
 json_glib = dependency('json-glib-1.0')
